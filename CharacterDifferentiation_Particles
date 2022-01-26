@@ -1,0 +1,32 @@
+#  Write a program that returns the particle and its class based on its spin and electric charge.
+#  Particle 	Class 	Spin 	Electric charge
+#  Strange 	Quark 	1/2 	-1/3
+#  Charm 	Quark 	1/2 	2/3
+#  Electron 	Lepton 	1/2 	-1
+#  Neutrino 	Lepton 	1/2 	0
+#  Photon 	Boson 	1 	0
+
+spin = input()
+charge = input()
+first = '1'
+second = '2'
+third = '3'
+charm_quark = "Charm Quark"
+electron_lepton = "Electron Lepton"
+neutrino_lepton = "Neutrino Lepton"
+photon = "Photon Boson"
+strange_quark = "Strange Quark"
+
+if first == spin:
+    particle = photon
+elif second in charge:
+    particle = charm_quark
+elif third in charge:
+    particle = strange_quark
+elif first in charge:
+    particle = electron_lepton
+else:
+    particle = neutrino_lepton
+
+print_object = particle
+print(print_object)
