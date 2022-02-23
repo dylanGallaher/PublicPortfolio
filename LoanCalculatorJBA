@@ -1,0 +1,92 @@
+from math import ceil
+from math import log
+import argparse
+
+payment_type = ["annuity", "diff"]
+int_four = 4
+percent = 100
+plural = 2
+single = 1
+year_to_months = 12
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--type', choices=["annuity", "diff"])
+parser.add_argument('--interest')
+parser.add_argument('--payment')
+parser.add_argument('--principal')
+parser.add_argument('--periods')
+args = parser.parse_args()
+
+list_negative_checker = []
+if args.type == None or str(args.type) not in payment_type:
+    print("Incorrect parameters. Type")
+elif args.interest == None:
+    print("Incorrect parameters. Interest")
+elif str(args.type) == "diff" and args.payment:
+    print("Incorrect parameters. Diff")
+else:
+    list_negative_checker.append(float(args.interest))
+    if not args.payment == None:
+        list_negative_checker.append(int(args.payment))
+    if not args.principal == None:
+        list_negative_checker.append(int(args.principal))
+    if not args.periods == None:
+        list_negative_checker.append(int(args.periods))
+    if not int_four > len(list_negative_checker):
+        print("Incorrect parameters. List len")
+    else:
+        for _ in range(len(list_negative_checker)):
+            negative_checker = list_negative_checker[_]
+            if negative_checker < zero:
+                negative_checker = True
+                break
+            negative_checker = False
+        if negative_checker == True:
+            print("Incorrect parameters. Negative parameter")
+        elif str(args.type) == "annuity":
+            if args.periods == None:
+                i = (float(args.interest) / percent) / (year_to_months)
+                log_input = int(args.payment) / (int(args.payment) - i * int(args.principal))
+                number_of_periods = ceil(log(log_input, 1 + i))
+                number_of_years = number_of_periods // year_to_months
+                number_of_months = number_of_periods % year_to_months
+                print_object = f'It will take #year and #month to repay this loan!'
+                if number_of_years < single:
+                    print_object = print_object.replace("#year and ", "")
+                elif number_of_years > single:
+                    print_object = print_object.replace('#year', str(number_of_years) + ' years')
+                else:
+                    print_object = print_object.replace('#year', str(number_of_years) + ' year')
+                if number_of_months < single:
+                    print_object = print_object.replace(" and #month", "")
+                elif number_of_months > single:
+                    print_object = print_object.replace("#month", str(number_of_months) + " months")
+                else:
+                    print_object = print_object.replace("#month", str(number_of_months) + " month")
+                overpayment = str(int(args.payment) * int(number_of_periods) - int(args.principal))
+                overpayment = f'Overpayment = {overpayment}'
+                print(print_object)
+                print(overpayment)
+            elif args.principal == None: 
+                i = (float(args.interest) / percent) / year_to_months
+                loan_principal = str(ceil(int(args.payment) / ((i * (pow(1 + i, int(args.periods)))) / (pow(1 + i, int(args.periods)) - 1))))
+                print(f'Your loan principal = {loan_principal}!')        
+                overpayment = str(int(args.payment) * int(args.periods) - int(loan_principal))
+                print(f'Overpayment = {overpayment}')
+            elif args.payment == None:
+                i = (float(args.interest) / percent) / year_to_months
+                overpayment = str(ceil(int(args.principal) * (i * pow(1 + i, int(args.periods)) / (pow(1 + i, int(args.periods)) - 1))))
+                annuity_payment = overpayment
+                print(f'Your annuity payment = {annuity_payment}!')        
+                overpayment = str(int(overpayment))
+                print(f'Overpayment = {overpayment}')
+        elif args.type == payment_type[1]:
+            interest_totals = 0
+            i = (float(args.interest) / percent) / year_to_months
+            for _ in range(1, int(args.periods) + 1):
+                payment = ceil((int(args.principal) / int(args.periods)) + i  * (int(args.principal) - ((int(args.principal) * (_ - 1)) / int(args.periods))))
+                print_object = f"Month {_}: payment is {payment}"
+                print(print_object)
+                interest_totals += payment
+            overpayment = str(int(args.principal) - interest_totals)
+            print(overpayment)
