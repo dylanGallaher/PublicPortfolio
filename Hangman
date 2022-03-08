@@ -1,0 +1,71 @@
+import random
+attempt = 0
+max_attempts =  8
+ONE = 1
+ZERO = 0
+print_title = '''H A N G M A N'''
+menu_prompt = 'Type "play" to play the game, "exit" to quit: > play'
+menu_input = ""
+list_password = ['python', 'java', 'kotlin', 'javascript']
+password_index = random.randint(0, len(list_password) - 1)
+password = list_password[password_index]
+list_output = []
+for i in password:
+    list_output.append("-")
+current_state = ""
+set_input_history = set()
+prompt = 'Input a letter:'
+non_member_message = "That letter doesn't appear in the word"
+print_result = ['''You guessed the word!
+You survived!''', 'You lost!']
+closing_statement = '''Thanks for playing!
+We'll see how well you did in the next stage'''
+
+print(print_title)
+menu_input = input(menu_prompt)
+print()
+if menu_input == 'exit':
+    exit()
+elif menu_input == "play":
+    while attempt < max_attempts:
+        for i in list_output:
+            current_state += i
+        print()
+        print(current_state)
+        improvement_tracker = list_output.count("-")
+        user_input = input(prompt)
+        if len(user_input) != ONE:
+            print("You should input a single letter")
+        elif user_input.isalpha() == False:
+            print("Please enter a lowercase English letter")
+        elif user_input.islower() == False:
+            print("Please enter a lowercase English letter")
+        elif user_input in set_input_history:
+            print("You've already guessed this letter")
+        else:
+            set_input_history.add(user_input)
+            if user_input in password:
+                located_positions = []
+                position_index = 0
+                for i in password:
+                    if i == user_input:
+                        located_positions.append(position_index)
+                        position_index += 1
+                    else:
+                        position_index += 1
+                for i in located_positions:
+                    list_output[i] = user_input
+                located_positions.clear()
+                if list_output.count("-") == improvement_tracker:
+                    print("No improvements")
+                    attempt += 1
+            else:
+                print(non_member_message)
+                attempt += 1
+            if list_output.count("-") == ZERO:
+                print(print_result[0])
+                break
+        current_state = ""
+    else:
+        print(print_result[1])
+        print()
