@@ -1,0 +1,119 @@
+# write your code here
+winners = []
+attempts = 0
+attempts_history = []
+even_x_odd_o = 0
+ONE = 1
+ZERO = 0
+result = ""
+list_chars = [["_" for a in range(3)] for b in range(3)]
+print_list_chars = [[" " if a == "_" else a for a in b] for b in list_chars]
+print(f'''---------
+| {print_list_chars[0][0]} {print_list_chars[0][1]} {print_list_chars[0][2]} |
+| {print_list_chars[1][0]} {print_list_chars[1][1]} {print_list_chars[1][2]} |
+| {print_list_chars[2][0]} {print_list_chars[2][1]} {print_list_chars[2][2]} |
+---------''')
+while result == "":
+    update_cell_confirmation = ""
+    while update_cell_confirmation == "":
+        list_coordinates = input('Enter the coordinates:').split()
+        x = list_coordinates[0]
+        y = list_coordinates[1]
+        if x.isnumeric() is False or y.isnumeric() is False:
+            print('You should enter numbers!')
+        elif int(x) < 1 or int(y) < 1 or int(x) > 3 or int(y) > 3:
+            print('Coordinates should be from 1 to 3!')
+        else:
+            x = int(x) - 1
+            y = int(y) - 1
+            if list_chars[x][y] == "X" or list_chars[x][y] == "O":
+                print('This cell is occupied! Choose another one!')
+            elif even_x_odd_o % 2 == 0:
+                list_chars[x][y]  = "X"
+                even_x_odd_o += 1
+                update_cell_confirmation = "confirmed"
+                attempts_history.append(list_chars[x][y])
+                attempts += 1
+            elif even_x_odd_o % 2 == 1:
+                list_chars[x][y]  = "O"
+                even_x_odd_o += 1
+                update_cell_confirmation = "confirmed"
+                attempts_history.append(list_chars[x][y])
+                attempts += 1
+    print_list_chars = [[" " if a == "_" else a for a in b] for b in list_chars]
+    print(f'''---------
+| {print_list_chars[0][0]} {print_list_chars[0][1]} {print_list_chars[0][2]} |
+| {print_list_chars[1][0]} {print_list_chars[1][1]} {print_list_chars[1][2]} |
+| {print_list_chars[2][0]} {print_list_chars[2][1]} {print_list_chars[2][2]} |
+---------''')
+    if attempts >= 5:
+    # Columns
+        list_column_0 = [a[0] for a in list_chars if a[0] != "_"]
+        if len(list_column_0) == 3:
+            set_column_0 = set(list_column_0)
+            if len(set_column_0) == ONE:
+                for i in set_column_0:
+                    winners.append(i)
+        else:
+            list_column_0.clear()
+        list_column_1 = [a[1] for a in list_chars if a[1] != "_"]
+        if len(list_column_1) == 3:
+            set_column_1 = set(list_column_1)
+            if len(set_column_1) == ONE:
+                for i in set_column_1:
+                    winners.append(i)
+        else:
+            list_column_1.clear()
+        list_column_2 = [a[2] for a in list_chars if a[2] != "_"]
+        if len(list_column_2) == 3:
+            set_column_2 = set(list_column_2)
+            if len(set_column_2) == ONE:
+                for i in set_column_2:
+                    winners.append(i)
+        else:
+            list_column_2.clear()
+        # Rows
+        list_row = []
+        for a in list_chars:
+            for i in a:
+                if i != "_":
+                    list_row.append(i)
+            if list_row == 3:
+                set_row = set(list_row)
+                if len(set_row) == ONE:
+                    for i in set_row:
+                        winners.append(i)
+        # Diagonal top left to bottom right
+        counter = 0
+        list_diag_TL_BR = []
+        for a in list_chars:
+            if a[counter] != "_":
+                list_diag_TL_BR.append(a[counter])
+                counter += 1
+        if len(list_diag_TL_BR) == 3:
+            set_diag_TL_BR = set(list_diag_TL_BR)
+            if len(set_diag_TL_BR) == ONE:
+                for i in set_diag_TL_BR:
+                    winners.append(i)
+        # Diagonal top right to bottom left
+        counter = 2
+        list_diag_TR_BL = []
+        for a in list_chars:
+            if a[counter] != "_":
+                list_diag_TR_BL.append(a[counter])
+                counter -= 1
+        if len(list_diag_TR_BL) == 3:
+            set_diag_TR_BL = set(list_diag_TR_BL)
+            if len(set_diag_TR_BL) == ONE:
+                for i in set_diag_TR_BL:
+                    winners.append(i)
+        if abs(attempts_history.count("X") - attempts_history.count("O")) > ONE:
+            result = 'Impossible'
+            print(result)
+        elif len(winners) == ZERO and attempts == 9:
+            result = "Draw"
+            print(result)
+        elif len(winners) > 0:
+            fresult = winners[0]
+            result = f'{fresult} wins'
+            print(result)
